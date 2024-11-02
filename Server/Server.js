@@ -50,6 +50,30 @@ app.get("/all-news", (req, res) => {
     fetchNews(url, res);
 });
 
+//Setting top-headlines
+app.options("/top-headlines", cors());
+app.get("/top-headlines", (req, res) =>{
+    let pageSize = parseInt(req.query.pageSize) ||80;
+    let page = parseInt(req.query.page) || 1;
+    let category = req.query.category || "business";
+
+    let Url =`https://newsapi.org/v2/top-headlines?category=${category}&language=en&page=${page}&pageSize=${pageSize}&apiKey=${API_KEY}`;
+    fetchNews(Url, res);
+});
+
+//setting country route
+app.options("/country/:iso", cors() );
+app.get("/country/:iso", (req, res) =>{
+    let pageSize = parseInt(req.query.pageSize) || 80;
+    let page = parseInt(req.query.page) || 1;
+    const country = req.params.iso;
+
+    let url =`https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${API_KEY}&page=${page}&pageSize=${pageSize}`;
+    fetchNews(url,res);
+});
+
+
+
 // Setting port
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
